@@ -1,4 +1,4 @@
-# Play.Catalog
+# Play Catalog
 
 ## About
 
