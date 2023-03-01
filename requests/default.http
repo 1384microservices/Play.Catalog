@@ -1,0 +1,15 @@
+### @name GetAllItems
+GET https://localhost:5001/items
+
+### @name CreateAnItem
+POST https://localhost:5001/items HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "High potion",
+    "description": "Restore a small amount of HP",
+    "price": "12"
+}
+
+### @name GetOneItem
+GET https://localhost:5001/items/{{CreateAnItem.response.body.$.id}} HTTP/1.1
