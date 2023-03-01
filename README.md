@@ -18,3 +18,5 @@ It is built only for playground and this code should not be used in production.
 ### Clone
 
 ### Run
+
+### Publish changes
