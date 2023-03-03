@@ -3,20 +3,17 @@ using Play.Catalog.Service.Entities;
 
 namespace Play.Catalog.Service.Repositories;
 
-public class ItemsRepository : IItemsRepository
+public class MongoRepository<T> : IRepository<T> where T : IEntity
 {
-    private const string CollectionName = "Items";
-    private readonly IMongoCollection<Item> collection;
-    private readonly FilterDefinitionBuilder<Item> filterBuilder = Builders<Item>.Filter;
+    private readonly IMongoCollection<T> collection;
+    private readonly FilterDefinitionBuilder<T> filterBuilder = Builders<T>.Filter;
 
-    public ItemsRepository(IMongoDatabase database)
+    public MongoRepository(IMongoDatabase database, string collectionName)
     {
-        // var client = new MongoClient("mongodb://localhost:27017");
-        // var database = client.GetDatabase("Catalog");
-        collection = database.GetCollection<Item>(CollectionName);
+        collection = database.GetCollection<T>(collectionName);
     }
 
-    public async Task<IReadOnlyCollection<Item>> GetAllAsync()
+    public async Task<IReadOnlyCollection<T>> GetAllAsync()
     {
 
         var filter = filterBuilder.Empty;
@@ -24,14 +21,14 @@ public class ItemsRepository : IItemsRepository
         return items;
     }
 
-    public async Task<Item> GetByIdAsync(Guid id)
+    public async Task<T> GetByIdAsync(Guid id)
     {
         var filter = filterBuilder.Eq(entity => entity.Id, id);
         var item = await collection.Find(filter).SingleOrDefaultAsync();
         return item;
     }
 
-    public async Task CreateAsync(Item item)
+    public async Task CreateAsync(T item)
     {
         if (item is null)
         {
@@ -41,7 +38,7 @@ public class ItemsRepository : IItemsRepository
         await collection.InsertOneAsync(item);
     }
 
-    public async Task UpdateAsync(Item item)
+    public async Task UpdateAsync(T item)
     {
         if (item is null)
         {
@@ -52,7 +49,7 @@ public class ItemsRepository : IItemsRepository
         await collection.ReplaceOneAsync(filter, item);
     }
 
-    public async Task DeleteAsync(Item item)
+    public async Task DeleteAsync(T item)
     {
         if (item is null)
         {
