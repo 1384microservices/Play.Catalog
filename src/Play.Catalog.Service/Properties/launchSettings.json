@@ -1,13 +1,5 @@
 ﻿{
   "$schema": "https://json.schemastore.org/launchsettings.json",
-  "iisSettings": {
-    "windowsAuthentication": false,
-    "anonymousAuthentication": true,
-    "iisExpress": {
-      "applicationUrl": "http://localhost:9488",
-      "sslPort": 44379
-    }
-  },
   "profiles": {
     "Play.Catalog.Service": {
       "commandName": "Project",
