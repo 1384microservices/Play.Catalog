@@ -1,4 +1,4 @@
-# Play Catalog
+# Play Economy Catalog service
 Play economy game items catalog service.
 
 ## About
@@ -19,13 +19,16 @@ It is built only for playground and this code should not be used in production.
 * Install docker[^wsl]: `winget install --id Docker.DockerDesktop`
 * Install visual studio code: `winget install --id VisualStudioCode --source winget`
 
+### Build development infrastructure.
+This service needs some infrastructure services like MongoDB to run. The infrastructure stack is already configured at [Play.Infrastructure](https://github.com/1384microservices/Play.Infrastructure) repository.
+
 ### Install Play.Common
 This services needs Play.Common nuget package. To make it available on your machine run first instructions from [Play.Common](https://github.com/1384microservices/Play.Common) repository.
 
 ### Clone source
-Create a project folder on your box. **D:\Projects\Play Economy** is a good idea but you can choose whatever fits your needs.
+Create a project folder on your box. **D:\Projects\Play Economy** is a good idea but you can choose whatever fits your needs. For Windows boxes you have to issue this command in a powershell window: `New-Item -ItemType Directory -Path 'D:\Projects\Play Economy'`. Switch to this directory: `Set-Locatin -Path 'D:\Projects\Play Economy'`. 
 
-For Windows boxes you have to issue this command in a powershell window: `New-Item -ItemType Directory -Path 'D:\Projects\Play Economy'`. Switch to that directory: `Set-Locatin -Path 'D:\Projects\Play Economy'`. Clone this repository to your box: `git clone https://github.com/1384microservices/Play.Catalog.git`.
+Clone this repository to your box: `git clone https://github.com/1384microservices/Play.Catalog.git`.
 
 ### Run database storage
 To get up and running you need a MongoDB database. We'll use a containerized deployment for this by issuing this command: `docker run --rm -d --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo`
