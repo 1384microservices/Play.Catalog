@@ -30,9 +30,6 @@ Create a project folder on your box. **D:\Projects\Play Economy** is a good idea
 
 Clone this repository to your box: `git clone https://github.com/1384microservices/Play.Catalog.git`.
 
-### Run database storage
-To get up and running you need a MongoDB database. We'll use a containerized deployment for this by issuing this command: `docker run --rm -d --name mongo -p 27017:27017 -v mongodbdata:/data/db mongo`
-
 ### Run service
 Within your service repository root folder (ie `D:\Projects\Play Economy`) start the service by issuing `dotnet run --Project .\src\Play.Catalog.Service\Play.Catalog.Service.csproj`
 
