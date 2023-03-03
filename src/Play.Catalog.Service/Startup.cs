@@ -21,20 +21,10 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
-        BsonSerializer.RegisterSerializer(new DateTimeSerializer(BsonType.String));
-        services.AddSingleton(serviceProvider =>
-        {
-            var mongoClient = new MongoClient(Configuration.GetMongoDbSettings()?.ConnectionString);
-            return mongoClient.GetDatabase(Configuration.GetServiceSettings()?.Name);
-        });
 
-        services.AddSingleton<IRepository<Item>>(svc =>
-        {
-            var database = svc.GetService<IMongoDatabase>();
-            var repository = new MongoRepository<Item>(database, "items");
-            return repository;
-        });
+        services
+        .AddMongo()
+        .AddMongoRepository<Item>("Items");
 
         services.AddControllers(opt =>
         {
