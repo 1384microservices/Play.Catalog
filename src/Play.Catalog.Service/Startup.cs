@@ -1,11 +1,6 @@
 using Microsoft.OpenApi.Models;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
 using Play.Catalog.Service.Entities;
-using Play.Catalog.Service.Extensions;
-using Play.Catalog.Service.Repositories;
+using Play.Common.MongoDB;
 
 namespace Play.Catalog.Service;
 
