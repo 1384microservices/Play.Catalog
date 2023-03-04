@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Play.Catalog.Contracts;
 using Play.Catalog.Service.Dtos;
 using Play.Catalog.Service.Entities;
 using Play.Catalog.Service.Extensions;
@@ -14,38 +16,21 @@ namespace Play.Catalog.Service.Controllers;
 [Route("[controller]")]
 public class ItemsController : ControllerBase
 {
-    private static int _requestsCounter = 0;
-
     private readonly IRepository<Item> _repository;
+    private readonly IPublishEndpoint _publishEndPoint;
 
-    public ItemsController(IRepository<Item> repository)
+    public ItemsController(IRepository<Item> repository, IPublishEndpoint publishEndPoint)
     {
         _repository = repository;
+        _publishEndPoint = publishEndPoint;
     }
 
     // GET /items
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ItemDto>>> GetAsync()
     {
-        _requestsCounter++;
-        Console.WriteLine($"Request {_requestsCounter}: Starting...");
-
-        if (_requestsCounter <= 2)
-        {
-            Console.WriteLine($"Request {_requestsCounter}: Delaying...");
-            await Task.Delay(TimeSpan.FromSeconds(10));
-        }
-
-        if (_requestsCounter <= 4)
-        {
-
-            Console.WriteLine($"Request {_requestsCounter}: 500 internal server error.");
-            return StatusCode(500);
-        }
-
-        var items = await _repository.GetAllAsync();
-        var dtos = items.Select(i => i.AsDto());
-        return Ok(dtos);
+        var items = (await _repository.GetAllAsync()).Select(item => item.AsDto());
+        return Ok(items);
     }
 
     // GET /items/12345
@@ -75,6 +60,7 @@ public class ItemsController : ControllerBase
         };
 
         await _repository.CreateAsync(item);
+        await _publishEndPoint.Publish(new CatalogItemCreated(item.Id, item.Name, item.Description));
 
         return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
     }
@@ -95,18 +81,20 @@ public class ItemsController : ControllerBase
         item.Price = dto.Price;
 
         await _repository.UpdateAsync(item);
+        await _publishEndPoint.Publish(new CatalogItemUpdated(item.Id, item.Name, item.Description));
 
         return NoContent();
     }
 
     // DELETE
     [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IActionResult> DeleteAsync(Guid id)
     {
         var item = await _repository.GetOneAsync(id);
         if (item != null)
         {
             await _repository.DeleteAsync(item);
+            await _publishEndPoint.Publish(new CatalogItemDeleted(id));
         }
 
         return NoContent();
