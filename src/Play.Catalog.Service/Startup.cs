@@ -12,6 +12,8 @@ namespace Play.Catalog.Service;
 
 public class Startup
 {
+    private const string AllowedOriginSetting = "AllowedOrigin";
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
@@ -22,8 +24,7 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMongo()
-        .AddMongoRepository<Item>("Items");
+        services.AddMongo().AddMongoRepository<Item>("Items");
 
         services.AddMassTransitWithRabbitMQ();
 
@@ -46,6 +47,12 @@ public class Startup
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Play.Catalog.Service v1"));
+            app.UseCors(cfg =>
+            {
+                cfg.WithOrigins(Configuration[AllowedOriginSetting])
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
         }
 
         app.UseHttpsRedirection();
