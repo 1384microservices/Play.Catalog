@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Contracts;
 using Play.Catalog.Service.Dtos;
@@ -14,8 +15,10 @@ namespace Play.Catalog.Service.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize(Roles = AdminRole)]
 public class ItemsController : ControllerBase
 {
+    private const string AdminRole = "Admin";
     private readonly IRepository<Item> _repository;
     private readonly IPublishEndpoint _publishEndPoint;
 

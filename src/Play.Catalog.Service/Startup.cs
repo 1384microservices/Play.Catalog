@@ -5,8 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Play.Catalog.Service.Entities;
+using Play.Common.Configuration;
+using Play.Common.Identity;
 using Play.Common.MassTransit;
 using Play.Common.MongoDB;
+using Play.Common.Settings;
 
 namespace Play.Catalog.Service;
 
@@ -24,9 +27,14 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddMongo().AddMongoRepository<Item>("Items");
+        var serviceSettings = Configuration.GetSection<ServiceSettings>();
 
-        services.AddMassTransitWithRabbitMQ();
+        services
+            .AddMongo()
+            .AddMongoRepository<Item>("Items")
+            .AddMassTransitWithRabbitMQ()
+            .AddJwtBearerAuthentication()
+            ;
 
         services.AddControllers(opt =>
         {
@@ -56,11 +64,9 @@ public class Startup
         }
 
         app.UseHttpsRedirection();
-
         app.UseRouting();
-
+        app.UseAuthentication();
         app.UseAuthorization();
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
