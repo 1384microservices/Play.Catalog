@@ -36,6 +36,22 @@ public class Startup
             .AddJwtBearerAuthentication()
             ;
 
+        services
+        .AddAuthorization(opt =>
+        {
+            opt.AddPolicy(Policies.Read, policy =>
+            {
+                policy.RequireRole("Admin");
+                policy.RequireClaim("scope", "catalog.readaccess", "catalog.fullaccess");
+            });
+
+            opt.AddPolicy(Policies.Write, policy =>
+            {
+                policy.RequireRole("Admin");
+                policy.RequireClaim("scope", "catalog.writeaccess", "catalog.fullaccess");
+            });
+        });
+
         services.AddControllers(opt =>
         {
             opt.SuppressAsyncSuffixInActionNames = false;
