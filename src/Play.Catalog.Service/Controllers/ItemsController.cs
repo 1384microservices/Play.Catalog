@@ -66,7 +66,7 @@ public class ItemsController : ControllerBase
         };
 
         await _repository.CreateAsync(item);
-        await _publishEndPoint.Publish(new CatalogItemCreated(item.Id, item.Name, item.Description));
+        await _publishEndPoint.Publish(new CatalogItemCreated(item.Id, item.Name, item.Description, item.Price));
 
         return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
     }
@@ -88,7 +88,7 @@ public class ItemsController : ControllerBase
         item.Price = dto.Price;
 
         await _repository.UpdateAsync(item);
-        await _publishEndPoint.Publish(new CatalogItemUpdated(item.Id, item.Name, item.Description));
+        await _publishEndPoint.Publish(new CatalogItemUpdated(item.Id, item.Name, item.Description, item.Price));
 
         return NoContent();
     }

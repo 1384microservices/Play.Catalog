@@ -33,8 +33,7 @@ public class Startup
             .AddMongo()
             .AddMongoRepository<Item>("Items")
             .AddMassTransitWithRabbitMQ()
-            .AddJwtBearerAuthentication()
-            ;
+            .AddJwtBearerAuthentication();
 
         services
         .AddAuthorization(opt =>
