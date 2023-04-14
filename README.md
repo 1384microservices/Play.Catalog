@@ -33,7 +33,27 @@ Clone this repository to your box: `git clone https://github.com/1384microservic
 ### Run service
 Within your service repository root folder (ie `D:\Projects\Play Economy`) start the service by issuing `dotnet run --Project .\src\Play.Catalog.Service\Play.Catalog.Service.csproj`
 
-### Publish changes
+### Pack and publish contracts
+```powershell
+# Change with your package version.
+$version="1.0.2"
+
+# Change with your organisation name.
+$owner="1384microservices"
+
+# Change with your GitHub Personal Access Token
+$gh_pat="[type your PAT here]"
+
+# Change with your repository URL
+$repositoryUrl="https://github.com/$owner/Play.Catalog"
+
+# Build package
+dotnet pack .\src\Play.Catalog.Contracts\ --configuration Release -p:PackageVersion=$version -p:RepositoryUrl=$repositoryUrl -o ..\packages\
+
+# Publish package
+dotnet nuget push ..\packages\Play.Catalog.Contracts.$version.nupkg --api-key $gh_pat --source "github"
+
+```
 
 
 
