@@ -2,6 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <PackageDescription>This service implements items catalog service REST api. It is built only for playground and this code should not be used in production.</PackageDescription>
+    <Authors>Andrei Tudor</Authors>
+    <Company>Play Economy</Company>
   </PropertyGroup>
 
   <ItemGroup>
