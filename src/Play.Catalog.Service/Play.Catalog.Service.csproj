@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <PackageDescription>This service implements items catalog service REST api. It is built only for playground and this code should not be used in production.</PackageDescription>
+    <Authors>Andrei Tudor</Authors>
+    <Company>Play Economy</Company>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Play.Common" Version="1.0.10" />
+    <PackageReference Include="Play.Common" Version="1.0.6" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     
   </ItemGroup>
