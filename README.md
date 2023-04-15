@@ -5,12 +5,6 @@ Play economy game items catalog service.
 This service implements items catalog service REST api.
 It is built only for playground and this code should not be used in production.
 
-### Endpoints
-
-### Architecture
-
-## Run
-
 ## Contribute
 ### Prerequisites
 * Install [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/)
