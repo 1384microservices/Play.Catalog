@@ -2,7 +2,7 @@
 Play economy game items catalog service.
 
 ## About
-This service implements items catalog service REST api.
+This service implements items catalog service REST API.
 It is built only for playground and this code should not be used in production.
 
 ## Contribute
@@ -32,13 +32,11 @@ Within your service repository root folder (ie `D:\Projects\Play Economy`) start
 # Change with your package version.
 $version="1.0.2"
 
-# Change with your organisation name.
 $owner="1384microservices"
 
 # Change with your GitHub Personal Access Token
 $gh_pat="[type your PAT here]"
 
-# Change with your repository URL
 $repositoryUrl="https://github.com/$owner/Play.Catalog"
 
 # Build package
@@ -48,7 +46,5 @@ dotnet pack .\src\Play.Catalog.Contracts\ --configuration Release -p:PackageVers
 dotnet nuget push ..\packages\Play.Catalog.Contracts.$version.nupkg --api-key $gh_pat --source "github"
 
 ```
-
-
 
 [^wsl]:[You need to have WSL upfront](https://learn.microsoft.com/en-us/windows/wsl/)
