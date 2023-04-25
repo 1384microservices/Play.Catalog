@@ -51,7 +51,7 @@ dotnet nuget push ..\packages\Play.Catalog.Contracts.$version.nupkg --api-key $g
 # Create docker image
 docker-compose build
 
-$imageVersion="1.0.5"
+$imageVersion="1.0.6"
 docker tag "play.catalog:latest" "play.catalog:${imageVersion}"
 
 $appName="playeconomy1384"
