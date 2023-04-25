@@ -44,7 +44,23 @@ dotnet pack .\src\Play.Catalog.Contracts\ --configuration Release -p:PackageVers
 
 # Publish package
 dotnet nuget push ..\packages\Play.Catalog.Contracts.$version.nupkg --api-key $gh_pat --source "github"
+```
 
+### Publish service container image
+```powershell
+# Create docker image
+docker-compose build
+
+$imageVersion="1.0.5"
+docker tag "play.catalog:latest" "play.catalog:${imageVersion}"
+
+$appName="playeconomy1384"
+$repositoryUrl="${appName}.azurecr.io"
+
+docker tag "play.catalog:latest" "${repositoryUrl}/play.catalog:${imageVersion}"
+
+az acr login --name $appName
+docker push "${repositoryUrl}/play.catalog:${imageVersion}"
 ```
 
 [^wsl]:[You need to have WSL upfront](https://learn.microsoft.com/en-us/windows/wsl/)
