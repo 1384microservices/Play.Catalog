@@ -77,6 +77,13 @@ $identityClientId = az identity show --resource-group $appName --name $k8sNS --q
 az keyvault set-policy -n $appName --secret-permissions get list --spn $identityClientId
 ```
 
+### Establish the federated identity credentials
+```powershell
+$appName="playeconomy1384"
+$k8sNS="catalog"
+$aksOIDIssuer=az aks show -n $appName -g $appName --query "oidcIssuerProfile.issuerUrl" -otsv
+az identity federated-credential create --name $k8sNS --identity-name $k8sNS --resource-group $appName --issuer $aksOIDIssuer --subject "system:serviceaccount:${k8sNS}:${k8sNS}-serviceaccount"
+```
 
 
 
