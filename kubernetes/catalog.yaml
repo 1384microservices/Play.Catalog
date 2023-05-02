@@ -15,12 +15,14 @@ spec:
       serviceAccountName: catalog-serviceaccount
       containers:
       - name: catalog
-        image: playeconomy1384.azurecr.io/play.catalog:1.0.6
+        image: playeconomy1384.azurecr.io/play.catalog:1.0.7
         env:
         - name: ServiceSettings__MessageBroker
           value: SERVICEBUS
         - name: ServiceSettings__KeyVaultName
           value: playeconomy1384
+        - name: ServiceSettings__Authority
+          value: https://playeconomy1384.northeurope.cloudapp.azure.com/identity-svc
         resources:
           limits:
             memory: "128Mi"
@@ -44,7 +46,7 @@ kind: Service
 metadata:
   name: catalog-service
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: catalog
   ports:
@@ -57,6 +59,6 @@ kind: ServiceAccount
 metadata:
   name: catalog-serviceaccount
   annotations:
-    azure.workload.identity/client-id: d6f1b5c7-dfa3-4dea-a1b7-a7b2f1b419b7
+    azure.workload.identity/client-id: 75f94483-23ed-40f7-a0af-81533771aa30
   labels:
     azure.workload.identity/use: "true"
