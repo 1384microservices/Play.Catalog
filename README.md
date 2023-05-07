@@ -92,4 +92,24 @@ kubectl create namespace $k8sNS
 kubectl apply -f kubernetes\catalog.yaml -n $k8sNS
 ```
 
+### Remove K8S deployments
+```powershell
+$appName="playeconomy1384"
+$k8sNS="catalog"
+kubectl delete -f kubernetes\catalog.yaml -n $k8sNS
+```
+
+### Install the helm chart
+```powershell
+$helmUser=[guid]::Empty.Guid
+
+$appname="playeconomy1384"
+$registry="${appname}.azurecr.io"
+$helmPassword=az acr login --name $appname --expose-token --output tsv --query accessToken
+helm registry login $registry --username $helmUser --password $helmPassword
+
+$k8sNS="catalog"
+$chartVersion="0.1.0"
+helm upgrade catalog-service oci://$registry/helm/microservice --version $chartVersion -f ./helm/values.yaml -n $k8sNS --install
+```
 [^wsl]:[You need to have WSL upfront](https://learn.microsoft.com/en-us/windows/wsl/)
