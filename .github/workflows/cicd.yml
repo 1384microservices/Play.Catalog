@@ -54,4 +54,11 @@ jobs:
           -p:RepositoryUrl=https://github.com/${{github.repository_owner}}/Play.Catalog \
           -o out
 
+      - name: Publish
+        run: |
+          dotnet nuget push out/*.nupkg
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+
       
