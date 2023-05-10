@@ -60,5 +60,23 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
+  build-and-publish-container:
+    runs-on: ubuntu-latest
+    needs: generate-version
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build and publish docker image
+        uses: docker/build-push-actions@v4
+        with:
+          push: false
+          tags: |
+              playeconomy1384.azurecr.io/play.catalog:${{needs.generate-version.outputs.new_version}}
+          build-args: |
+            GITHUB_PAT=${{secrets.GITHUB_TOKEN}}
+
 
       
