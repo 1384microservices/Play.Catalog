@@ -44,9 +44,6 @@ jobs:
       - name: Restore dependencies
         run: |
           dotnet restore ./src/Play.Catalog.Contracts/ \
-          --configuration Release \
-          -p:PackageVersion=${{needs.generate-version.outputs.new_version}} \
-          -p:RepositoryUrl=https://github.com/${{github.repository_owner}} \
-          -o out
+          --verbosity minimal
 
       
