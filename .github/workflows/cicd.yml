@@ -46,4 +46,12 @@ jobs:
           dotnet restore ./src/Play.Catalog.Contracts/ \
           --verbosity minimal
 
+      - name: Pack
+        run: |
+          dotnet pack ./src/Play.Catalog.Contracts/ \
+          --configuration Release \
+          -p:PackageVersion=${{needs.generate-version.outputs.new_version}} \
+          -p:RepositoryUrl=https://github.com/${{github.repository_owner}}/Play.Catalog \
+          -o out
+
       
