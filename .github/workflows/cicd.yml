@@ -104,5 +104,18 @@ jobs:
       - name: Install Helm
         uses: azure/setup-helm@v2.0
 
+      - name: Login to Helm registry
+        shell: pwsh
+        run: |
+          $helmPassword=az acr login `
+            --name ${{vars.AZ_ACR_REGISTRY_NAME}} `
+            --expose-token `
+            --output tsv `
+            --query accessToken
+
+          helm registry login "${{vars.AZ_ACR_REGISTRY_NAME}}.azurecr.io" `
+            --username ${{vars.HELM_USER_GUID}} `
+            --password $helmPassword
+
 
       
