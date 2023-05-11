@@ -1,4 +1,4 @@
-name: Play.Catalog CICD
+name: Play.Catalog service CICD
 
 on:
   push:
@@ -42,17 +42,19 @@ jobs:
           NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
       - name: Restore dependencies
+        shell: pwsh
         run: |
-          dotnet restore ./src/Play.Catalog.Contracts/ \
-          --verbosity minimal
+          dotnet restore src/Play.Catalog.Contracts/ `
+            --verbosity minimal
 
       - name: Pack
+        shell: pwsh
         run: |
-          dotnet pack ./src/Play.Catalog.Contracts/ \
-          --configuration Release \
-          -p:PackageVersion=${{needs.generate-version.outputs.new_version}} \
-          -p:RepositoryUrl=https://github.com/${{github.repository_owner}}/Play.Catalog \
-          -o out
+          dotnet pack src/Play.Catalog.Contracts/ `
+            --configuration Release `
+            -p:PackageVersion=${{needs.generate-version.outputs.new_version}} `
+            -p:RepositoryUrl=https://github.com/${{github.repository_owner}}/Play.Catalog `
+            -o out
 
       - name: Publish
         run: |
@@ -64,19 +66,43 @@ jobs:
     runs-on: ubuntu-latest
     needs: generate-version
     permissions:
+      id-token: write
       contents: read
       packages: read
     steps:
       - uses: actions/checkout@v3
 
+      - name: Azure Login
+        uses: azure/login@v1.4.3
+        with:
+          client-id: ${{secrets._AZURE_CLIENT_ID}}
+          tenant-id: ${{secrets._AZURE_TENANT_ID}}
+          subscription-id: ${{secrets._AZURE_SUB_ID}}
+
+      - name: ACR Login
+        shell: pwsh
+        run: |
+          az acr login `
+            --name ${{vars.AZ_ACR_REGISTRY_NAME}}
+
       - name: Build and publish docker image
         uses: docker/build-push-action@v4
         with:
-          push: false
+          push: true
           tags: |
               playeconomy1384.azurecr.io/play.catalog:${{needs.generate-version.outputs.new_version}}
           build-args: |
             GITHUB_PAT=${{secrets.GITHUB_TOKEN}}
+
+      - name: Get AKS credentials
+        shell: pwsh
+        run: |
+          az aks get-credentials `
+            --resource-group ${{vars.AZ_RG_NAME}} `
+            --name ${{vars.AZ_AKS_CLUSTER_NAME}}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v2.0
 
 
       
