@@ -8,6 +8,7 @@ using Play.Catalog.Service.Entities;
 using Play.Common.Configuration;
 using Play.Common.HealthChecks;
 using Play.Common.Identity;
+using Play.Common.Logging;
 using Play.Common.MassTransit;
 using Play.Common.MongoDB;
 using Play.Common.Settings;
@@ -49,17 +50,13 @@ public class Startup
             });
         });
 
-        services.AddControllers(opt =>
-        {
-            opt.SuppressAsyncSuffixInActionNames = false;
-        });
+        services.AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog.Service", Version = "v1" });
-        });
+        services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog.Service", Version = "v1" }));
 
         services.AddHealthChecks().AddMongoDb();
+
+        services.AddSeqLogging(Configuration.GetSeqSettings());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
