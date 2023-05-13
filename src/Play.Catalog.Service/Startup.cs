@@ -11,7 +11,6 @@ using Play.Common.Identity;
 using Play.Common.Logging;
 using Play.Common.MassTransit;
 using Play.Common.MongoDB;
-using Play.Common.Settings;
 
 namespace Play.Catalog.Service;
 
@@ -35,28 +34,34 @@ public class Startup
             .AddMassTransitWithMessageBroker(Configuration)
             .AddJwtBearerAuthentication();
 
-        services.AddAuthorization(opt =>
-        {
-            opt.AddPolicy(Policies.Read, policy =>
+        services
+            .AddAuthorization(opt =>
             {
-                policy.RequireRole("Admin");
-                policy.RequireClaim("scope", "catalog.readaccess", "catalog.fullaccess");
+                opt.AddPolicy(Policies.Read, policy =>
+                {
+                    policy.RequireRole("Admin");
+                    policy.RequireClaim("scope", "catalog.readaccess", "catalog.fullaccess");
+                });
+
+                opt.AddPolicy(Policies.Write, policy =>
+                {
+                    policy.RequireRole("Admin");
+                    policy.RequireClaim("scope", "catalog.writeaccess", "catalog.fullaccess");
+                });
             });
 
-            opt.AddPolicy(Policies.Write, policy =>
-            {
-                policy.RequireRole("Admin");
-                policy.RequireClaim("scope", "catalog.writeaccess", "catalog.fullaccess");
-            });
-        });
+        services
+            .AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
 
-        services.AddControllers(opt => opt.SuppressAsyncSuffixInActionNames = false);
+        services
+            .AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog.Service", Version = "v1" }));
 
-        services.AddSwaggerGen(c => c.SwaggerDoc("v1", new OpenApiInfo { Title = "Play.Catalog.Service", Version = "v1" }));
+        services
+            .AddHealthChecks()
+            .AddMongoDb();
 
-        services.AddHealthChecks().AddMongoDb();
-
-        services.AddSeqLogging(Configuration.GetSeqSettings());
+        services
+            .AddSeqLogging(Configuration.GetSeqSettings());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
