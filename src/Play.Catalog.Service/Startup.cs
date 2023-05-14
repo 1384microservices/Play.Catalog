@@ -63,10 +63,9 @@ public class Startup
             .AddMongoDb();
 
         services
-            .AddSeqLogging(Configuration.GetSeqSettings());
-
-        services
-            .AddTracing(Configuration.GetServiceSettings(), Configuration.GetSection<JaegerSettings>());
+            .AddSeqLogging(Configuration.GetSeqSettings())
+            .AddTracing(Configuration.GetServiceSettings(), Configuration.GetSection<JaegerSettings>())
+            .AddMetrics(Configuration.GetServiceSettings());
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,13 +84,16 @@ public class Startup
             });
         }
 
-        app.UseRouting();
-        app.UseAuthentication();
-        app.UseAuthorization();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapPlayEconomyHealthChecks();
-        });
+        app
+            .UseOpenTelemetryPrometheusScrapingEndpoint()
+            .UseRouting()
+            .UseAuthentication()
+            .UseAuthorization()
+            .UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapPlayEconomyHealthChecks();
+            });
+
     }
 }
